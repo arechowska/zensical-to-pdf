@@ -171,6 +171,7 @@ def main() -> None:
             f"--metadata=cover-bank:{site_name}",
             f"--metadata=header-right:{site_name}",
             f"--metadata=pdf-lang:{lang}",
+            "--from=markdown-implicit_figures",
             "--toc",
             "--toc-depth=2",
             f"--resource-path={resource_path_str}",

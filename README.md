@@ -6,14 +6,15 @@ Generates a professional PDF from your Zensical docs with a cover page, table of
 
 ## Quick start
 
-1. Install [Pandoc](https://pandoc.org/installing.html)
-2. Install XeLaTeX:
+1. Make sure you have Python 3.11+
+2. Install [Pandoc](https://pandoc.org/installing.html)
+3. Install XeLaTeX:
    - macOS: `brew install --cask basictex`
    - Linux: `apt install texlive-xetex texlive-lang-cyrillic fonts-liberation`
    - Windows: install [MiKTeX](https://miktex.org/download)
-3. Install Python dependencies: `pip install -r requirements.txt`
-4. Copy the files from `tools/` into your project's `tools/` directory and edit `pdf_vars.yaml`
-5. Run: `python3 tools/generate_pdf.py --output public/documentation.pdf`
+4. Install Python dependencies: `pip install -r requirements.txt`
+5. Copy the files from `tools/` into your project's `tools/` directory and edit `pdf_vars.yaml`
+6. Run: `python3 tools/generate_pdf.py --output public/documentation.pdf`
 
 ## How it works
 
@@ -74,6 +75,19 @@ pdf:
     python3 tools/generate_pdf.py --skip index.md --output public/documentation.pdf
     open public/documentation.pdf  # macOS; use xdg-open on Linux
 ```
+
+### Download button on the site
+
+To add a PDF download button to your documentation homepage, add this line to `docs/index.md`:
+
+```markdown
+[Download PDF](documentation.pdf){ .md-button }
+```
+
+The filename in the link must match the `--output` value in your Makefile. If you change one, update both:
+
+- `Makefile` → `--output public/your-name.pdf`
+- `docs/index.md` → `[Download PDF](your-name.pdf){ .md-button }`
 
 ## Configuration (pdf_vars.yaml)
 

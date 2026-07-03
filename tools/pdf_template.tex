@@ -1,0 +1,118 @@
+\documentclass[12pt, a4paper]{article}
+
+% Шрифты и кириллица
+\usepackage{fontspec}
+\IfFontExistsTF{$mainfont$}{
+  \setmainfont{$mainfont$}
+}{
+  \setmainfont{Liberation Sans}
+}
+
+% Поля страницы
+\usepackage[
+  left=$geometry-left$,
+  right=$geometry-right$,
+  top=$geometry-top$,
+  bottom=$geometry-bottom$
+]{geometry}
+
+% Язык
+\usepackage[main=russian, english]{babel}
+
+% Колонтитулы
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small $header-left$}
+\fancyhead[R]{\small $header-right$}
+\fancyfoot[R]{\small \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Гиперссылки
+\usepackage[colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
+
+% Графика
+\usepackage{graphicx}
+\usepackage{float}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% Таблицы
+\usepackage{longtable, booktabs, array, calc}
+\newcommand{\real}[1]{#1}
+
+% Перенос длинных URL
+\usepackage{url}
+
+% Отступы между абзацами
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% Разрыв страницы и отступ перед заголовком 1 уровня
+\makeatletter
+\renewcommand\section{\clearpage\@startsection{section}{1}{\z@}%
+  {-6ex \@plus -1ex \@minus -.2ex}%
+  {2.3ex \@plus.2ex}%
+  {\normalfont\Large\bfseries}}
+\makeatother
+
+% Картинки не переносятся на следующую страницу
+\floatplacement{figure}{H}
+
+% Ширина колонки номеров в содержании (для длинных номеров типа 20.1.10)
+\usepackage{tocloft}
+\setlength{\cftsecnumwidth}{2.0em}
+\setlength{\cftsubsecindent}{0.5em}
+\setlength{\cftsubsecnumwidth}{2.5em}
+\setlength{\cftsubsubsecindent}{1.0em}
+\setlength{\cftsubsubsecnumwidth}{3.8em}
+
+
+% Pandoc 3.x совместимость
+\newcommand{\pandocbounded}[1]{#1}
+\newcounter{none}
+
+% Блоки кода
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\small, breaklines=true}
+\usepackage{color}
+\newenvironment{Shaded}{\small}{}
+
+% Обход ошибок с tight_list
+$if(tight-list)$
+\providecommand{\tightlist}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+$else$
+\providecommand{\tightlist}{\setlength{\itemsep}{4pt}\setlength{\parskip}{2pt}}
+$endif$
+
+\begin{document}
+
+% Обложка
+\begin{titlepage}
+  \vspace*{4cm}
+  \begin{center}
+    {\LARGE\bfseries $cover-title$\par}
+    \vspace{1cm}
+    {\large $cover-subtitle$\par}
+    \vspace{2cm}
+    {\normalsize $cover-bank$\par}
+    \vfill
+    {\small $cover-date$}
+  \end{center}
+\end{titlepage}
+
+% Содержание
+$if(toc)$
+\tableofcontents
+\thispagestyle{fancy}
+\newpage
+$endif$
+
+% Основной контент
+$body$
+
+\end{document}

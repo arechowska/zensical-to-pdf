@@ -1,20 +1,40 @@
--- admonitions.lua: конвертирует MkDocs !!! блоки в blockquote для PDF
--- и убирает внутренние .md-ссылки (они ведут на localhost в PDF)
+-- admonitions.lua: converts MkDocs !!! blocks to blockquotes for PDF
+-- also strips internal .md links (they resolve to localhost in PDF)
 
 function Link(el)
     local target = el.target or ""
-    -- внутренние ссылки: .md файлы, якоря (#...) или localhost
+    -- strip internal links: .md files, anchors (#...), or localhost
     if target:match("%.md") or target:match("^#") or target:match("localhost") then
-        return el.content  -- оставляем только текст ссылки
+        return el.content
     end
 end
 
--- Типы admonitions → заголовок по умолчанию
-local ADMONITION_LABELS = {
-    note = "Примечание", info = "Информация", tip = "Совет",
-    warning = "Внимание", danger = "Опасность", success = "Успешно",
-    example = "Пример", question = "Вопрос", quote = "Цитата",
+local LABELS = {
+    en = {
+        note = "Note", info = "Info", tip = "Tip",
+        warning = "Warning", danger = "Danger", success = "Success",
+        example = "Example", question = "Question", quote = "Quote",
+    },
+    ru = {
+        note = "Примечание", info = "Информация", tip = "Совет",
+        warning = "Внимание", danger = "Опасность", success = "Успешно",
+        example = "Пример", question = "Вопрос", quote = "Цитата",
+    },
 }
+
+local lang = "en"
+
+function Meta(meta)
+    if meta["pdf-lang"] then
+        lang = pandoc.utils.stringify(meta["pdf-lang"])
+    end
+    return meta
+end
+
+local function get_label(admonition_type)
+    local set = LABELS[lang] or LABELS["en"]
+    return set[admonition_type] or admonition_type
+end
 
 function Para(el)
     local first = el.content[1]
@@ -30,7 +50,6 @@ function Para(el)
     for _, item in ipairs(el.content) do
         if state == "prefix" then
             if item.t == "Str" and item.text ~= "!!!" then
-                -- тип: note, warning, info и т.д.
                 admonition_type = item.text:lower():gsub('"', '')
                 if item.text:find('"') or item.text:find('\u{201C}') then
                     state = "title"
@@ -69,9 +88,9 @@ function Para(el)
         table.remove(body, 1)
     end
 
-    -- Если заголовок не задан — использовать метку по типу
+    -- use default label if no title was specified
     if #title == 0 then
-        local label = ADMONITION_LABELS[admonition_type] or admonition_type
+        local label = get_label(admonition_type)
         if #label > 0 then
             title = {pandoc.Str(label)}
         end

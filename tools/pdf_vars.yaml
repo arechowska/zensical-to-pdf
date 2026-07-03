@@ -1,21 +1,20 @@
-# Переменные для генерации PDF
-# Скопируйте этот файл в tools/ вашего проекта и заполните под себя.
+# PDF settings — copy this file to your project's tools/ and edit as needed.
 
-# Шрифт (должен быть установлен в системе)
+# Font name (must be installed on the system; falls back to Liberation Sans if not found)
 mainfont: "Arial"
 
-# Поля страницы
+# Page margins
 geometry-left: "2cm"
 geometry-right: "2cm"
 geometry-top: "2.5cm"
 geometry-bottom: "2.5cm"
 
-# Колонтитулы
-header-left: "Руководство пользователя"
-header-right: "Название организации"
+# Headers
+header-left: "User Guide"
+header-right: "Organization Name"
 
-# Обложка
-cover-title: "Руководство пользователя"
-cover-subtitle: "Название продукта"
-cover-bank: "Название организации"
+# Cover page
+cover-title: "User Guide"
+cover-subtitle: "Product Name"
+cover-bank: "Organization Name"
 cover-date: "2026"

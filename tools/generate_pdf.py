@@ -55,9 +55,9 @@ def find_xelatex() -> str:
     for path in ["/Library/TeX/texbin/xelatex", "/usr/bin/xelatex", "/usr/local/bin/xelatex"]:
         if os.path.exists(path):
             return path
-    result = subprocess.run(["which", "xelatex"], capture_output=True, text=True, check=False)
-    if result.returncode == 0:
-        return result.stdout.strip()
+    found = shutil.which("xelatex")
+    if found:
+        return found
     return "xelatex"
 
 
@@ -108,6 +108,7 @@ def main() -> None:
     site_name = project.get("site_name", "Documentation")
     nav = project.get("nav", config.get("nav", []))
     docs_dir = Path(project.get("docs_dir", config.get("docs_dir", "docs")))
+    lang = project.get("theme", {}).get("language", config.get("language", "en"))
 
     md_pages: list[str] = []
     if nav:
@@ -154,7 +155,7 @@ def main() -> None:
             resource_paths = [".", str(tmp_dir)] + media_dirs
         else:
             resource_paths = ["."] + media_dirs
-        resource_path_str = ":".join(resource_paths)
+        resource_path_str = os.pathsep.join(resource_paths)
 
         tools_dir = Path(__file__).parent
         xelatex = find_xelatex()
@@ -169,6 +170,7 @@ def main() -> None:
             f"--lua-filter={tools_dir / 'admonitions.lua'}",
             f"--metadata=cover-bank:{site_name}",
             f"--metadata=header-right:{site_name}",
+            f"--metadata=pdf-lang:{lang}",
             "--toc",
             "--toc-depth=2",
             f"--resource-path={resource_path_str}",
@@ -176,7 +178,8 @@ def main() -> None:
         ]
 
         env = os.environ.copy()
-        env["PATH"] = "/Library/TeX/texbin:" + env.get("PATH", "")
+        if sys.platform == "darwin":
+            env["PATH"] = "/Library/TeX/texbin:" + env.get("PATH", "")
 
         result = subprocess.run(cmd, capture_output=True, text=True, env=env, check=False)
 

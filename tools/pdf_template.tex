@@ -1,6 +1,6 @@
 \documentclass[12pt, a4paper]{article}
 
-% Шрифты и кириллица
+% Fonts
 \usepackage{fontspec}
 \IfFontExistsTF{$mainfont$}{
   \setmainfont{$mainfont$}
@@ -8,7 +8,7 @@
   \setmainfont{Liberation Sans}
 }
 
-% Поля страницы
+% Page margins
 \usepackage[
   left=$geometry-left$,
   right=$geometry-right$,
@@ -16,10 +16,10 @@
   bottom=$geometry-bottom$
 ]{geometry}
 
-% Язык
-\usepackage[main=russian, english]{babel}
+% Language
+\usepackage[$babel-lang$]{babel}
 
-% Колонтитулы
+% Headers and footers
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
@@ -29,10 +29,10 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
-% Гиперссылки
+% Hyperlinks
 \usepackage[colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
 
-% Графика
+% Images
 \usepackage{graphicx}
 \usepackage{float}
 \makeatletter
@@ -41,18 +41,18 @@
 \makeatother
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 
-% Таблицы
+% Tables
 \usepackage{longtable, booktabs, array, calc}
 \newcommand{\real}[1]{#1}
 
-% Перенос длинных URL
+% Long URL wrapping
 \usepackage{url}
 
-% Отступы между абзацами
+% Paragraph spacing
 \setlength{\parskip}{6pt}
 \setlength{\parindent}{0pt}
 
-% Разрыв страницы и отступ перед заголовком 1 уровня
+% Page break before top-level headings
 \makeatletter
 \renewcommand\section{\clearpage\@startsection{section}{1}{\z@}%
   {-6ex \@plus -1ex \@minus -.2ex}%
@@ -60,10 +60,10 @@
   {\normalfont\Large\bfseries}}
 \makeatother
 
-% Картинки не переносятся на следующую страницу
+% Keep images on the same page
 \floatplacement{figure}{H}
 
-% Ширина колонки номеров в содержании (для длинных номеров типа 20.1.10)
+% TOC number column widths (for deep numbering like 20.1.10)
 \usepackage{tocloft}
 \tocloftpagestyle{fancy}
 \setlength{\cftsecnumwidth}{2.0em}
@@ -73,17 +73,17 @@
 \setlength{\cftsubsubsecnumwidth}{3.8em}
 
 
-% Pandoc 3.x совместимость
+% Pandoc 3.x compatibility
 \newcommand{\pandocbounded}[1]{#1}
 \newcounter{none}
 
-% Блоки кода
+% Code blocks
 \usepackage{fancyvrb}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\small, breaklines=true}
 \usepackage{color}
 \newenvironment{Shaded}{\small}{}
 
-% Обход ошибок с tight_list
+% tight_list fix
 $if(tight-list)$
 \providecommand{\tightlist}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
 $else$
@@ -92,7 +92,7 @@ $endif$
 
 \begin{document}
 
-% Обложка
+% Cover page
 \begin{titlepage}
   \vspace*{4cm}
   \begin{center}
@@ -100,20 +100,20 @@ $endif$
     \vspace{1cm}
     {\large $cover-subtitle$\par}
     \vspace{2cm}
-    {\normalsize $cover-bank$\par}
+    {\normalsize $cover-org$\par}
     \vfill
     {\small $cover-date$}
   \end{center}
 \end{titlepage}
 
-% Содержание
+% Table of contents
 $if(toc)$
 \tableofcontents
 \thispagestyle{fancy}
 \newpage
 $endif$
 
-% Основной контент
+% Body
 $body$
 
 \end{document}

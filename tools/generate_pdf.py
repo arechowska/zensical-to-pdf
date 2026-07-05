@@ -92,6 +92,8 @@ def main() -> None:
     parser.add_argument("--config", default="zensical.toml", metavar="FILE")
     parser.add_argument("--skip", nargs="*", default=[], metavar="FILE",
                         help="Pages to exclude from PDF (e.g. index.md)")
+    parser.add_argument("--vars", default=None, metavar="FILE",
+                        help="YAML metadata file (default: tools/pdf_vars.yaml)")
     parser.add_argument("--verbose", action="store_true",
                         help="Show full Pandoc log on error")
     args = parser.parse_args()
@@ -109,6 +111,17 @@ def main() -> None:
     nav = project.get("nav", config.get("nav", []))
     docs_dir = Path(project.get("docs_dir", config.get("docs_dir", "docs")))
     lang = project.get("theme", {}).get("language", config.get("language", "en"))
+
+    # Maps zensical language codes to babel package options.
+    # Add more languages here as needed: https://ctan.org/pkg/babel
+    BABEL_LANGS = {
+        "ru": "main=russian, english",
+        "en": "english",
+        "de": "main=ngerman, english",
+        "fr": "main=french, english",
+        "es": "main=spanish, english",
+    }
+    babel_lang = BABEL_LANGS.get(lang, "english")
 
     md_pages: list[str] = []
     if nav:
@@ -166,14 +179,14 @@ def main() -> None:
             f"--output={output_path}",
             f"--pdf-engine={xelatex}",
             f"--template={tools_dir / 'pdf_template.tex'}",
-            f"--metadata-file={tools_dir / 'pdf_vars.yaml'}",
+            f"--metadata-file={Path(args.vars) if args.vars else tools_dir / 'pdf_vars.yaml'}",
             f"--lua-filter={tools_dir / 'admonitions.lua'}",
-            f"--metadata=cover-bank:{site_name}",
+            f"--metadata=cover-org:{site_name}",
             f"--metadata=header-right:{site_name}",
             f"--metadata=pdf-lang:{lang}",
+            f"--metadata=babel-lang:{babel_lang}",
             "--from=markdown-implicit_figures",
             "--toc",
-            "--toc-depth=2",
             f"--resource-path={resource_path_str}",
             "--dpi=120",
         ]

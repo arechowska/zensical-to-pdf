@@ -13,8 +13,11 @@ geometry-bottom: "2.5cm"
 header-left: "User Guide"
 header-right: "Organization Name"
 
+# Table of contents depth (1 = sections only, 2 = sections + subsections)
+toc-depth: 2
+
 # Cover page
 cover-title: "User Guide"
 cover-subtitle: "Product Name"
-cover-bank: "Organization Name"
+cover-org: "Organization Name"
 cover-date: "2026"
